@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 div
   h1.title Lista de productos
   table.product-list
@@ -16,3 +17,23 @@ div
     |          {{/if}}
   a(href='/')
     button Volver al formulario de carga
+=======
+div
+  h1.title Lista de productos
+  table.product-list
+    tr
+      th T&iacute;tulo
+      th Precio
+      th Miniatura
+    |          {{#if productos.leneth}}
+    |         {{#each productos}}
+    tr
+      td  {{this.titulo}} 
+      td  {{this.precio}} 
+      td
+        img(height='72px' width='72px' src='{{this.thumbnail}}')
+    |          {{/each}}
+    |          {{/if}}
+  a(href='/')
+    button Volver al formulario de carga
+>>>>>>> 54353657ceaf3186771ab011ce8fe05fd21aee64
