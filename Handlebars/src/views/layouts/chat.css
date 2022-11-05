@@ -1,21 +1,8 @@
-* {
-    margin: 0;
-    box-sizing: border-box;
+#username {
+    color: blue;
 }
 
-body {
-    background-color: black;
-    color:blue;
-    display: flex;
-    flex-direction:column;
-    gap:100px;
-    margin-top:50px;
-}
-
-main {
-    display: flex;
-    flex-direction:column;
-    gap:20px;
-    margin-left:10px;
-    border-radius: 20px;
+#text {
+    color: green;
+    font-style: italic;
 }

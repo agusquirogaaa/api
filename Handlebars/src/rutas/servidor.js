@@ -1,57 +1,32 @@
-const express = require("express")
-const {Server: HttpServer} = require ("http")
-const {Server: IOServer} = require ("socket.io")
+const express = require('express');
+const { Server: HttpServer } = require('http');
+const { Server: IOServer } = require('socket.io');
 
-const app = express()
-const httpServer = new HttpServer(app)
-const io = new IOServer(httpServer)
+const PORT = process.env.PORT || 3020;
+const app = express();
+app.use(express.static('public'));
+const httpServer = new HttpServer(app);
+const io = new IOServer(httpServer);
 
+const messages = [
+	{ author: 'Juan', text: '¡Hola! ¿Cómo estás? ' },
+	{ author: 'Pedro', text: 'Muy bien! ¿Y vos?' },
+	{ author: 'Ana', text: 'Genial!' }
+]
 
-// indicamos que queremos cargar los archivos estáticos que se encuentran en la raíz de la misma
-app.use (express.static("./public"))
-
-// esta ruta carga nuestro archivo index.html en la raíz de la misma
-app.get("/", (req,res) => {
-    res.sendFile("index.html", {root: __dirname })
+app.get('/',(req,res)=>{
+	res.sendFile('index.html')
 })
 
-/*
-const logueoEntrada= []
-io.on("connection", (socket) => {
-    // PASO 2 CONEXION SOCKET
-    console.log("cliente conectado")
-    // "connection" se ejecuta la primera vez que se abre una nueva conexion
-    //console.log("Usuario conectado", socket)
-    // se imprimirá solo la primera vez que se ha abierto la conexion
-    //socket.emit("msj")
-    
-    // PASO 4 RECIBO MENSAJE Y NOTIFICACION
-    socket.on("ventana", "")
-    socket.on("notificacion", (hora) => {
-        logueoEntrada.push(socket.id + "entro: " + hora)
-    
-    // PASO 5 EMITO MENSAJE
-        socket.emit("ventana", logueoEntrada)
-    })
-})
+io.on('connection', clienteNuevo => {
+	console.log('Un cliente se ha conectado');
+	clienteNuevo.emit('messages', messages);
+	clienteNuevo.on('new-message', data => {
+		messages.push(data);
+		io.sockets.emit('messages-push', data);
+	})
+});
 
-*/
-
-const messages = [];
-
-io.on ("connection", socket => {
-    console.log ("cliente conectado")
-    io.sockets.emit("messages", messages);
-    socket.on("chat", chat => {
-        console.log(chat);
-        messages.push(chat);
-        io.sockets.emit("messages",messages);
-    })
-})
-
-
-// el servidor funicionando en el puerto 3000
-httpServer.listen(3000, () => console.log("SERVER ON"))
-
-
-
+httpServer.listen(PORT, () => {
+	console.log(`Server running on PORT ${PORT}`);
+});
